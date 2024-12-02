@@ -25,7 +25,6 @@ def create_pairplot(data, features, hue=None):
     return fig
 
 def main():
-    st.set_page_config(page_title='Analisi Dataset Mance', layout='wide')
     st.title('📊 Analisi Dataset Mance')
     
     tips = load_and_clean_data()    
