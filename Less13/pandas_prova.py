@@ -4,22 +4,53 @@ import pandas as pd
 from PIL import Image
 from streamlit_option_menu import option_menu
 import importlib
+import joblib
 import os
 
+<<<<<<< HEAD:Less13/pandas_prova.py
 class MultiApp:
     def __init__(self):
         self.apps = []
+=======
+st.set_page_config(
+                    page_title="Template Project",
+                    page_icon=Image.open("img/icon_site.png"),
+                    layout="wide",
+                    )
+>>>>>>> ce320a1c8007e711a8ac1218ce7ab3dc2e0ddaa0:Less13/multipage_streamlit/app.py
+
+@st.cache_resource
+def load_models():
+    models = {}    
+    model_configs = {
+                    'titanic': 'models/titanic_pipe.pkl',
+                    #'iris': 'models/iris_pipe.pkl'  
+                    }
+    for model_name, model_path in model_configs.items():
+        if os.path.exists(model_path):
+            models[model_name] = joblib.load(model_path)
+        else:
+            st.error(f"File modello non trovato: {model_path}")
+    return models
 
 def get_pages():
+
+    PAGES = 'pag' # cartella con le pagine, non usare pages!!!
     pages = []
     icons = []
     modules = []
     
     BLACKLIST_FILES = ['__init__', 'test']  # aggiungi qui i file da escludere    
     # page_order = []
+<<<<<<< HEAD:Less13/pandas_prova.py
     page_order = ['app1', 'app2', 'app3']
 
     files = [f[:-3] for f in os.listdir('applications') if f.endswith('.py') and f[:-3] not in BLACKLIST_FILES]
+=======
+    page_order = ['home', 'history', 'datavisualisation', 'map', 'data','titanic']
+
+    files = [f[:-3] for f in os.listdir(PAGES) if f.endswith('.py') and f[:-3] not in BLACKLIST_FILES]
+>>>>>>> ce320a1c8007e711a8ac1218ce7ab3dc2e0ddaa0:Less13/multipage_streamlit/app.py
     files.sort(key=lambda x: page_order.index(x) if x in page_order else len(page_order))
     
     # Mapping icon 
@@ -28,16 +59,19 @@ def get_pages():
                     'history': 'bi-hourglass-split',
                     'datavisualisation': 'bi-card-image',
                     'map': 'bi-map',
-                    'contacts': 'bi-envelope'
+                    'data': 'bi-database-down',
                     }
     
     for file in files:
         page_name = file.capitalize()
         pages.append(page_name)        
         icons.append(icon_mapping.get(file, 'bi-file'))        
+<<<<<<< HEAD:Less13/pandas_prova.py
         module = importlib.import_module(f'applications.{file}')
+=======
+        module = importlib.import_module(f'{PAGES}.{file}')
+>>>>>>> ce320a1c8007e711a8ac1218ce7ab3dc2e0ddaa0:Less13/multipage_streamlit/app.py
         modules.append(module)
-    
     return pages, icons, modules
 
 pages, icons, modules = get_pages()
@@ -53,6 +87,9 @@ class MultiApp:
                         })
 
     def main():
+        # Carica i modelli all'avvio
+        st.session_state['models'] = load_models()
+
         with st.sidebar:
             app = option_menu(
                                 menu_title="Menu",
